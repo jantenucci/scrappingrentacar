@@ -17,7 +17,12 @@ st.title("🚗 Avis Argentina - Scraper de precios")
 
 # Google Sheets config
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-CREDS = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", SCOPE)
+import json
+from io import StringIO
+
+secrets_json = json.dumps(st.secrets["google"])
+CREDS = ServiceAccountCredentials.from_json_keyfile_dict(json.loads(secrets_json), SCOPE)
+
 gc = gspread.authorize(CREDS)
 spreadsheet_id = "1aQVNDkl9nTrNvOUuSkCk5wrd_Ox5-cb-etyQBCXRMuM"
 sh = gc.open_by_key(spreadsheet_id)
