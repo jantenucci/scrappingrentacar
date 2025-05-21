@@ -1,0 +1,7 @@
+streamlit
+selenium
+webdriver-manager
+gspread
+gspread-dataframe
+oauth2client
+pandas
