@@ -15,18 +15,9 @@ from datetime import date
 st.set_page_config(page_title="Avis Scraper", layout="centered")
 st.title("🚗 Avis Argentina - Scraper de precios")
 
-# Google Sheets config
-SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-import json
-from io import StringIO
-
-from oauth2client.service_account import ServiceAccountCredentials
+# Google Sheets config desde st.secrets
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 CREDS = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["google"], SCOPE)
-gc = gspread.authorize(CREDS)
-
-CREDS = ServiceAccountCredentials.from_json_keyfile_dict(json.loads(secrets_json), SCOPE)
-
 gc = gspread.authorize(CREDS)
 spreadsheet_id = "1aQVNDkl9nTrNvOUuSkCk5wrd_Ox5-cb-etyQBCXRMuM"
 sh = gc.open_by_key(spreadsheet_id)
@@ -128,7 +119,7 @@ if "driver" in st.session_state:
         del st.session_state.driver
 
         # Guardar en hoja nueva
-        nombre_hoja = f"{st.session_state.lugar_retiro[:25]}_{int(time.time())}"  # única
+        nombre_hoja = f"{st.session_state.lugar_retiro[:25]}_{int(time.time())}"
         try:
             worksheet = sh.add_worksheet(title=nombre_hoja, rows="100", cols="20")
         except:
@@ -139,5 +130,4 @@ if "driver" in st.session_state:
         set_with_dataframe(worksheet, df)
         st.success(f"✅ Datos guardados en Google Sheets (hoja '{nombre_hoja}')")
         st.dataframe(df)
-
 
