@@ -5,17 +5,19 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 import time
 import pandas as pd
 import gspread
 from gspread_dataframe import set_with_dataframe
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import date
+import json
 
 st.set_page_config(page_title="Avis Scraper", layout="centered")
 st.title("🚗 Avis Argentina - Scraper de precios")
 
-# Google Sheets config desde st.secrets
+# Google Sheets config
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 CREDS = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["google"], SCOPE)
 gc = gspread.authorize(CREDS)
@@ -47,8 +49,12 @@ with st.form("input_form"):
     submitted = st.form_submit_button("Abrir navegador para completar búsqueda")
 
 if submitted:
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-    driver.maximize_window()
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     driver.get("https://www.avis.com.ar/reserva/lugar-fecha")
     st.session_state.driver = driver
     st.session_state.lugar_retiro = lugar_retiro
