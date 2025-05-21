@@ -1,6 +1,11 @@
 services:
   - type: web
-    name: streamlit-app
+    name: scrappingrentacar
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: streamlit run app.py
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "streamlit run app.py --server.port 10000"
+    plan: free
+    envVars:
+      - key: PORT
+        value: 10000
+
