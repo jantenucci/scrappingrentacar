@@ -20,7 +20,11 @@ SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 import json
 from io import StringIO
 
-secrets_json = json.dumps(st.secrets["google"])
+from oauth2client.service_account import ServiceAccountCredentials
+SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+CREDS = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["google"], SCOPE)
+gc = gspread.authorize(CREDS)
+
 CREDS = ServiceAccountCredentials.from_json_keyfile_dict(json.loads(secrets_json), SCOPE)
 
 gc = gspread.authorize(CREDS)
